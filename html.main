@@ -1,0 +1,352 @@
+<!DOCTYPE html>
+<html lang="sv">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Ung Karriär - Frågeformulär</title>
+  <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;600&display=swap" rel="stylesheet">
+  <style>
+    body {
+      font-family: 'Poppins', sans-serif;
+      margin: 0;
+      padding: 0;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      justify-content: center;
+      min-height: 100vh;
+      background: linear-gradient(135deg, #001f3f, #004d9a);
+      color: #fff;
+    }
+
+    .logo-container {
+      text-align: center;
+      margin-bottom: 20px;
+    }
+
+    .logo-container img {
+      max-width: 150px;
+      filter: drop-shadow(0 0 20px rgba(0, 0, 255, 0.5));
+    }
+
+    .container {
+      background: rgba(255, 255, 255, 0.1);
+      backdrop-filter: blur(10px);
+      border-radius: 20px;
+      padding: 30px;
+      width: 100%;
+      max-width: 400px;
+      text-align: center;
+      box-shadow: 0 8px 30px rgba(0, 0, 255, 0.3);
+    }
+
+    .progress-container {
+      width: 100%;
+      height: 10px;
+      background: rgba(255, 255, 255, 0.2);
+      border-radius: 50px;
+      overflow: hidden;
+      margin-bottom: 15px;
+      position: relative;
+    }
+
+    .progress-bar {
+      height: 100%;
+      width: 0%;
+      background: linear-gradient(135deg, #4A90E2, #0056A8);
+      transition: width 0.5s ease;
+    }
+
+    .progress-summary {
+      font-size: 0.9rem;
+      font-weight: 600;
+      margin-bottom: 10px;
+      color: rgba(255, 255, 255, 0.8);
+    }
+
+    .question {
+      font-size: 1.4rem;
+      font-weight: 700;
+      margin-bottom: 10px;
+      color: #ffffff;
+    }
+
+    input[type="text"], input[type="email"] {
+      width: 90%;
+      padding: 12px;
+      border-radius: 12px;
+      border: none;
+      background: rgba(255, 255, 255, 0.2);
+      color: #fff;
+      font-size: 1rem;
+      margin-bottom: 15px;
+      text-align: left;
+      outline: none;
+    }
+
+    input[type="text"]::placeholder, input[type="email"]::placeholder {
+      color: rgba(255, 255, 255, 0.6);
+    }
+
+    .options {
+      text-align: left;
+      margin: 20px auto;
+      max-width: 300px;
+    }
+
+    label {
+      display: flex;
+      align-items: center;
+      font-size: 1rem;
+      margin-bottom: 18px;
+      cursor: pointer;
+      gap: 12px;
+    }
+
+    input[type="checkbox"], input[type="radio"] {
+      appearance: none;
+      width: 22px;
+      height: 22px;
+      border: 2px solid #4A90E2;
+      border-radius: 4px;
+      background: none;
+      cursor: pointer;
+      transition: background 0.2s ease, box-shadow 0.3s ease;
+    }
+
+    input[type="checkbox"]:checked, input[type="radio"]:checked {
+      background: #4A90E2;
+      box-shadow: 0 0 10px rgba(0, 0, 255, 0.5);
+    }
+
+    label span {
+      line-height: 1.5;
+    }
+
+    button {
+      background: linear-gradient(135deg, #4A90E2, #0056A8);
+      border: none;
+      color: white;
+      padding: 16px 24px;
+      font-size: 1.2rem;
+      border-radius: 20px;
+      cursor: pointer;
+      width: 100%;
+      margin-top: 10px;
+      transition: transform 0.3s ease, box-shadow 0.3s ease;
+      box-shadow: 0 4px 20px rgba(0, 0, 255, 0.5);
+    }
+
+    button:hover {
+      transform: translateY(-4px) scale(1.05);
+      box-shadow: 0 12px 40px rgba(0, 0, 255, 0.6);
+    }
+
+    footer {
+      text-align: center;
+      margin-top: 20px;
+      font-size: 0.9rem;
+      color: rgba(255, 255, 255, 0.7);
+    }
+
+    /* Tack-sida stil */
+    .thank-you {
+      text-align: center;
+      padding: 50px;
+      color: #fff;
+    }
+
+    .thank-you h1 {
+      font-size: 2.4rem;
+      margin-bottom: 20px;
+    }
+
+    .thank-you p {
+      font-size: 1.2rem;
+    }
+  </style>
+</head>
+<body>
+  <div class="logo-container">
+    <img src="https://i.imgur.com/q5otiqm.png" alt="Logotyp">
+  </div>
+
+  <div class="container">
+    <div class="progress-container">
+      <div class="progress-bar" id="progress-bar"></div>
+    </div>
+    <div class="progress-summary">
+      Fråga <span id="current-question-number">1</span> av <span id="total-questions">9</span>
+    </div>
+    <form id="quiz-form">
+      <div id="question-container">
+        <div class="question" id="question">Vad heter du?</div>
+        <input type="text" id="answer" placeholder="Skriv ditt namn här..." />
+      </div>
+
+      <div class="options" id="options-container" style="display: none;"></div>
+      <input type="text" id="other-input" class="other-input" placeholder="Skriv ditt svar här..." style="display:none;" />
+
+      <button type="button" id="next-btn">Nästa</button>
+    </form>
+  </div>
+
+  <footer>
+    © 2025 Ung Karriär. Alla rättigheter förbehållna.
+  </footer>
+
+  <script>
+    const questions = [
+      { question: "Vad heter du?", type: "text" },
+      { question: "Vad är din e-postadress?", type: "email" },
+      { question: "Hur gammal är du?", type: "text" },
+      {
+        question: "Vad skulle du vilja jobba med?",
+        type: "checkbox",
+        options: [
+          "Jag vet inte än.",
+          "Restaurang, café eller matlagning.",
+          "Butik, försäljning eller service.",
+          "Evenemang eller kultur.",
+          "Annat"
+        ]
+      },
+      {
+        question: "Varför vill du vara med i programmet?",
+        type: "checkbox",
+        options: [
+          "Jag vill ha hjälp att hitta ett jobb.",
+          "Jag vill veta hur jag skriver ett bra CV.",
+          "Jag vill bli bättre på intervjuer.",
+          "Jag vill känna mig tryggare när jag söker jobb.",
+          "Jag vet inte riktigt, men det låter spännande."
+        ]
+      },
+      {
+        question: "Har du haft något jobb tidigare?",
+        type: "radio",
+        options: [
+          "Ja, t.ex. sommarjobb eller extrajobb.",
+          "Nej, jag har aldrig jobbat förut."
+        ]
+      },
+      {
+        question: "Hur skulle dina vänner eller familj beskriva dig? (Välj upp till tre ord)",
+        type: "checkbox",
+        options: [
+          "Ambitiös",
+          "Hjälpsam",
+          "Kreativ",
+          "Ansvarstagande",
+          "Positiv",
+          "Nyfiken",
+          "Annat"
+        ]
+      },
+      {
+        question: "Om vi väljer dig, är du redo att lägga några timmar i veckan på programmet?",
+        type: "radio",
+        options: [
+          "Ja, jag är redo att satsa.",
+          "Kanske, jag vill veta mer först."
+        ]
+      },
+      {
+        question: "Finns det något annat vi borde veta om dig? (Frivillig fråga, kort svar)",
+        type: "text",
+        optional: true
+      }
+    ];
+
+    let currentQuestionIndex = 0;
+    const questionElement = document.getElementById("question");
+    const answerElement = document.getElementById("answer");
+    const optionsContainer = document.getElementById("options-container");
+    const progressBar = document.getElementById("progress-bar");
+    const nextButton = document.getElementById("next-btn");
+    const currentQuestionNumber = document.getElementById("current-question-number");
+
+    nextButton.addEventListener("click", goToNextQuestion);
+
+    document.addEventListener("keydown", (e) => {
+      if (e.key === "Enter") {
+        e.preventDefault();
+        goToNextQuestion();
+      }
+    });
+
+    function goToNextQuestion() {
+      const currentQuestion = questions[currentQuestionIndex];
+
+      if (currentQuestion.type === "text" || currentQuestion.type === "email") {
+        if (answerElement.value.trim() === "" && !currentQuestion.optional) {
+          alert("Vänligen fyll i ett svar innan du går vidare.");
+          return;
+        }
+      } else if (currentQuestion.type === "checkbox" || currentQuestion.type === "radio") {
+        const selectedOptions = getCheckedOptions();
+        if (selectedOptions.length === 0 && !currentQuestion.optional) {
+          alert("Vänligen välj minst ett alternativ.");
+          return;
+        }
+      }
+
+      currentQuestionIndex++;
+      if (currentQuestionIndex < questions.length) {
+        loadQuestion();
+      } else {
+        showCompletionMessage();
+      }
+    }
+
+    function loadQuestion() {
+      const currentQuestion = questions[currentQuestionIndex];
+      questionElement.textContent = currentQuestion.question;
+      currentQuestionNumber.textContent = currentQuestionIndex + 1;
+      updateProgressBar();
+
+      if (currentQuestion.type === "text" || currentQuestion.type === "email") {
+        answerElement.style.display = "block";
+        optionsContainer.style.display = "none";
+        answerElement.value = "";
+        answerElement.placeholder =
+          currentQuestion.type === "text"
+            ? "Skriv ditt svar här..."
+            : "Skriv din e-postadress här...";
+      } else {
+        answerElement.style.display = "none";
+        optionsContainer.style.display = "block";
+        optionsContainer.innerHTML = currentQuestion.options
+          .map(
+            (option, index) => `
+            <label>
+              <input type="${currentQuestion.type}" name="option" value="${option}" />
+              <span>${option}</span>
+            </label>`
+          )
+          .join("");
+      }
+    }
+
+    function getCheckedOptions() {
+      const checkedInputs = document.querySelectorAll('input[name="option"]:checked');
+      return Array.from(checkedInputs).map((input) => input.value);
+    }
+
+    function updateProgressBar() {
+      const progress = ((currentQuestionIndex + 1) / questions.length) * 100;
+      progressBar.style.width = `${progress}%`;
+    }
+
+    function showCompletionMessage() {
+      document.body.innerHTML = `
+        <div class="thank-you">
+          <h1>Tack för att du fyllde i formuläret!</h1>
+          <p>Vi har tagit emot din information och kommer att kontakta dig inom kort.</p>
+        </div>`;
+    }
+
+    loadQuestion();
+  </script>
+</body>
+</html>
