@@ -131,60 +131,63 @@
   </div>
 
   <div class="container">
-    <form action="https://formspree.io/f/mwpveply" method="POST">
-      <!-- Fråga 1 -->
-      <div class="question">Vad heter du?</div>
-      <input type="text" name="name" placeholder="Skriv ditt namn här..." required />
+    <form id="quiz-form" action="https://formspree.io/f/mwpveply" method="POST">
+      <div class="step" style="display: block;">
+        <div class="question">Vad heter du?</div>
+        <input type="text" name="name" placeholder="Skriv ditt namn här..." required />
+      </div>
 
-      <!-- Fråga 2 -->
-      <div class="question">Vad är din e-postadress?</div>
-      <input type="email" name="email" placeholder="Skriv din e-post här..." required />
+      <div class="step" style="display: none;">
+        <div class="question">Vad är din e-postadress?</div>
+        <input type="email" name="email" placeholder="Skriv din e-post här..." required />
+      </div>
 
-      <!-- Fråga 3 -->
-      <div class="question">Hur gammal är du?</div>
-      <input type="number" name="age" placeholder="Skriv din ålder här..." required />
+      <div class="step" style="display: none;">
+        <div class="question">Hur gammal är du?</div>
+        <input type="number" name="age" placeholder="Skriv din ålder här..." required />
+      </div>
 
-      <!-- Fråga 4 -->
-      <div class="question">Vad skulle du vilja jobba med?</div>
-      <label><input type="checkbox" name="job_preference" value="Restaurang" /> Restaurang</label>
-      <label><input type="checkbox" name="job_preference" value="Butik" /> Butik</label>
-      <label><input type="checkbox" name="job_preference" value="Kultur" /> Kultur</label>
-      <label><input type="checkbox" name="job_preference" value="Annat" /> Annat</label>
+      <div class="step" style="display: none;">
+        <div class="question">Vad skulle du vilja jobba med?</div>
+        <label><input type="checkbox" name="job_preference" value="Restaurang" /> Restaurang</label>
+        <label><input type="checkbox" name="job_preference" value="Butik" /> Butik</label>
+        <label><input type="checkbox" name="job_preference" value="Kultur" /> Kultur</label>
+        <label><input type="checkbox" name="job_preference" value="Annat" /> Annat</label>
+      </div>
 
-      <!-- Fråga 5 -->
-      <div class="question">Varför vill du vara med i programmet?</div>
-      <label><input type="checkbox" name="reason" value="Hitta jobb" /> Hitta jobb</label>
-      <label><input type="checkbox" name="reason" value="CV" /> Skriva CV</label>
-      <label><input type="checkbox" name="reason" value="Intervjuer" /> Intervjuer</label>
+      <div class="step" style="display: none;">
+        <div class="question">Finns det något annat vi borde veta om dig?</div>
+        <textarea name="other_info" placeholder="Skriv här..."></textarea>
+      </div>
 
-      <!-- Fråga 6 -->
-      <div class="question">Har du haft något jobb tidigare?</div>
-      <label><input type="radio" name="previous_job" value="Ja" /> Ja, t.ex. sommarjobb</label>
-      <label><input type="radio" name="previous_job" value="Nej" /> Nej</label>
-
-      <!-- Fråga 7 -->
-      <div class="question">Hur skulle dina vänner eller familj beskriva dig?</div>
-      <label><input type="checkbox" name="description" value="Ambitiös" /> Ambitiös</label>
-      <label><input type="checkbox" name="description" value="Hjälpsam" /> Hjälpsam</label>
-      <label><input type="checkbox" name="description" value="Kreativ" /> Kreativ</label>
-
-      <!-- Fråga 8 -->
-      <div class="question">Om vi väljer dig, är du redo att lägga några timmar i veckan på programmet?</div>
-      <label><input type="radio" name="commitment" value="Ja" /> Ja</label>
-      <label><input type="radio" name="commitment" value="Kanske" /> Kanske</label>
-
-      <!-- Fråga 9 -->
-      <div class="question">Finns det något annat vi borde veta om dig?</div>
-      <textarea name="other_info" placeholder="Skriv här..."></textarea>
-
-      <!-- Skicka -->
-      <input type="hidden" name="_redirect" value="https://ungkarriar.se/tack.html">
-      <button type="submit">Skicka</button>
+      <button type="button" id="next-btn">Nästa</button>
+      <button type="submit" id="submit-btn" style="display: none;">Skicka</button>
     </form>
   </div>
 
   <footer>
     © 2025 Ung Karriär. Alla rättigheter förbehållna.
   </footer>
+
+  <script>
+    const steps = document.querySelectorAll('.step');
+    const nextButton = document.getElementById('next-btn');
+    const submitButton = document.getElementById('submit-btn');
+    let currentStep = 0;
+
+    nextButton.addEventListener('click', () => {
+      steps[currentStep].style.display = 'none';
+      currentStep++;
+
+      if (currentStep < steps.length) {
+        steps[currentStep].style.display = 'block';
+      }
+
+      if (currentStep === steps.length - 1) {
+        nextButton.style.display = 'none';
+        submitButton.style.display = 'block';
+      }
+    });
+  </script>
 </body>
 </html>
