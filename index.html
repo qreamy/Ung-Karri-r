@@ -19,16 +19,6 @@
       color: #fff;
     }
 
-    .logo-container {
-      text-align: center;
-      margin-bottom: 20px;
-    }
-
-    .logo-container img {
-      max-width: 150px;
-      filter: drop-shadow(0 0 20px rgba(0, 0, 255, 0.5));
-    }
-
     .container {
       background: rgba(255, 255, 255, 0.1);
       backdrop-filter: blur(10px);
@@ -40,12 +30,27 @@
       box-shadow: 0 8px 30px rgba(0, 0, 255, 0.3);
     }
 
-    .step {
-      display: none;
+    .progress-container {
+      width: 100%;
+      height: 10px;
+      background: rgba(255, 255, 255, 0.2);
+      border-radius: 50px;
+      overflow: hidden;
+      margin-bottom: 15px;
     }
 
-    .step.active {
-      display: block;
+    .progress-bar {
+      height: 100%;
+      width: 0%;
+      background: linear-gradient(135deg, #4A90E2, #0056A8);
+      transition: width 0.5s ease;
+    }
+
+    .progress-summary {
+      font-size: 0.9rem;
+      font-weight: 600;
+      margin-bottom: 10px;
+      color: rgba(255, 255, 255, 0.8);
     }
 
     .question {
@@ -67,7 +72,7 @@
       outline: none;
     }
 
-    input[type="text"]::placeholder, input[type="email"]::placeholder, input[type="number"]::placeholder, textarea::placeholder {
+    input[type="text"]::placeholder, input[type="email"]::placeholder, textarea::placeholder {
       color: rgba(255, 255, 255, 0.6);
     }
 
@@ -102,10 +107,6 @@
       box-shadow: 0 0 10px rgba(0, 0, 255, 0.5);
     }
 
-    textarea {
-      resize: none;
-    }
-
     button {
       background: linear-gradient(135deg, #4A90E2, #0056A8);
       border: none;
@@ -124,113 +125,129 @@
       transform: translateY(-4px) scale(1.05);
       box-shadow: 0 12px 40px rgba(0, 0, 255, 0.6);
     }
-
-    footer {
-      text-align: center;
-      margin-top: 20px;
-      font-size: 0.9rem;
-      color: rgba(255, 255, 255, 0.7);
-    }
   </style>
 </head>
 <body>
-  <div class="logo-container">
-    <img src="https://i.imgur.com/q5otiqm.png" alt="Logotyp">
-  </div>
-
   <div class="container">
-    <form action="https://getform.io/f/bjjjpkxb" method="POST">
-      <input type="hidden" name="_redirect" value="https://ungkarriar.se/tack">
-      <!-- Fråga 1 -->
-      <div class="step active">
-        <div class="question">Vad heter du?</div>
-        <input type="text" name="name" placeholder="Skriv ditt namn här..." required />
-        <button type="button" class="next-btn">Nästa</button>
-      </div>
-
-      <!-- Fråga 2 -->
-      <div class="step">
-        <div class="question">Vad är din e-postadress?</div>
-        <input type="email" name="email" placeholder="Skriv din e-post här..." required />
-        <button type="button" class="next-btn">Nästa</button>
-      </div>
-
-      <!-- Fråga 3 -->
-      <div class="step">
-        <div class="question">Hur gammal är du?</div>
-        <input type="number" name="age" placeholder="Skriv din ålder här..." required />
-        <button type="button" class="next-btn">Nästa</button>
-      </div>
-
-      <!-- Fråga 4 -->
-      <div class="step">
-        <div class="question">Vad skulle du vilja jobba med?</div>
-        <label><input type="checkbox" name="job_preference" value="Restaurang" /> Restaurang</label>
-        <label><input type="checkbox" name="job_preference" value="Butik" /> Butik</label>
-        <label><input type="checkbox" name="job_preference" value="Kultur" /> Kultur</label>
-        <label><input type="checkbox" name="job_preference" value="Annat" /> Annat</label>
-        <button type="button" class="next-btn">Nästa</button>
-      </div>
-
-      <!-- Fråga 5 -->
-      <div class="step">
-        <div class="question">Varför vill du vara med i programmet?</div>
-        <label><input type="checkbox" name="reason" value="Hitta jobb" /> Hitta jobb</label>
-        <label><input type="checkbox" name="reason" value="CV" /> Skriva CV</label>
-        <label><input type="checkbox" name="reason" value="Intervjuer" /> Intervjuer</label>
-        <button type="button" class="next-btn">Nästa</button>
-      </div>
-
-      <!-- Fråga 6 -->
-      <div class="step">
-        <div class="question">Har du haft något jobb tidigare?</div>
-        <label><input type="radio" name="previous_job" value="Ja" /> Ja, t.ex. sommarjobb</label>
-        <label><input type="radio" name="previous_job" value="Nej" /> Nej</label>
-        <button type="button" class="next-btn">Nästa</button>
-      </div>
-
-      <!-- Fråga 7 -->
-      <div class="step">
-        <div class="question">Hur skulle dina vänner eller familj beskriva dig?</div>
-        <label><input type="checkbox" name="description" value="Ambitiös" /> Ambitiös</label>
-        <label><input type="checkbox" name="description" value="Hjälpsam" /> Hjälpsam</label>
-        <label><input type="checkbox" name="description" value="Kreativ" /> Kreativ</label>
-        <button type="button" class="next-btn">Nästa</button>
-      </div>
-
-      <!-- Fråga 8 -->
-      <div class="step">
-        <div class="question">Om vi väljer dig, är du redo att lägga några timmar i veckan på programmet?</div>
-        <label><input type="radio" name="commitment" value="Ja" /> Ja</label>
-        <label><input type="radio" name="commitment" value="Kanske" /> Kanske</label>
-        <button type="button" class="next-btn">Nästa</button>
-      </div>
-
-      <!-- Fråga 9 -->
-      <div class="step">
-        <div class="question">Finns det något annat vi borde veta om dig?</div>
-        <textarea name="other_info" placeholder="Skriv här..."></textarea>
-        <button type="submit">Skicka</button>
-      </div>
+    <div class="progress-container">
+      <div class="progress-bar" id="progress-bar"></div>
+    </div>
+    <div class="progress-summary">
+      Fråga <span id="current-question-number">1</span> av <span id="total-questions">9</span>
+    </div>
+    <form action="https://getform.io/f/unik-form-id" method="POST" id="quiz-form">
+      <!-- Frågor kommer dynamiskt -->
+      <div id="question-container"></div>
+      <button type="button" id="next-btn">Nästa</button>
+      <button type="submit" id="submit-btn" style="display: none;">Skicka</button>
     </form>
   </div>
 
-  <footer>
-    © 2025 Ung Karriär. Alla rättigheter förbehållna.
-  </footer>
-
   <script>
-    const steps = document.querySelectorAll(".step");
-    const nextButtons = document.querySelectorAll(".next-btn");
-    let currentStep = 0;
+    const questions = [
+      { question: "Vad heter du?", type: "text", name: "name" },
+      { question: "Vad är din e-postadress?", type: "email", name: "email" },
+      { question: "Hur gammal är du?", type: "number", name: "age" },
+      {
+        question: "Vad skulle du vilja jobba med?",
+        type: "checkbox",
+        name: "job_preference",
+        options: ["Restaurang", "Butik", "Kultur", "Annat"]
+      },
+      {
+        question: "Varför vill du vara med i programmet?",
+        type: "checkbox",
+        name: "reason",
+        options: ["Hitta jobb", "CV", "Intervjuer"]
+      },
+      {
+        question: "Har du haft något jobb tidigare?",
+        type: "radio",
+        name: "previous_job",
+        options: ["Ja", "Nej"]
+      },
+      {
+        question: "Hur skulle dina vänner eller familj beskriva dig?",
+        type: "checkbox",
+        name: "description",
+        options: ["Ambitiös", "Hjälpsam", "Kreativ"]
+      },
+      {
+        question: "Om vi väljer dig, är du redo att lägga några timmar i veckan på programmet?",
+        type: "radio",
+        name: "commitment",
+        options: ["Ja", "Kanske"]
+      },
+      {
+        question: "Finns det något annat vi borde veta om dig?",
+        type: "textarea",
+        name: "other_info"
+      }
+    ];
 
-    nextButtons.forEach((button) => {
-      button.addEventListener("click", () => {
-        steps[currentStep].classList.remove("active");
-        currentStep++;
-        steps[currentStep].classList.add("active");
-      });
+    let currentQuestionIndex = 0;
+    const questionContainer = document.getElementById("question-container");
+    const progressBar = document.getElementById("progress-bar");
+    const currentQuestionNumber = document.getElementById("current-question-number");
+    const nextButton = document.getElementById("next-btn");
+    const submitButton = document.getElementById("submit-btn");
+
+    function loadQuestion() {
+      const currentQuestion = questions[currentQuestionIndex];
+      questionContainer.innerHTML = `
+        <div class="question">${currentQuestion.question}</div>
+        ${currentQuestion.type === "checkbox" || currentQuestion.type === "radio" ? `
+          <div class="options">
+            ${currentQuestion.options.map(option => `
+              <label>
+                <input type="${currentQuestion.type}" name="${currentQuestion.name}" value="${option}">
+                <span>${option}</span>
+              </label>
+            `).join('')}
+          </div>
+        ` : currentQuestion.type === "textarea" ? `
+          <textarea name="${currentQuestion.name}" placeholder="Skriv ditt svar här..."></textarea>
+        ` : `
+          <input type="${currentQuestion.type}" name="${currentQuestion.name}" placeholder="Skriv ditt svar här...">
+        `}
+      `;
+
+      currentQuestionNumber.textContent = currentQuestionIndex + 1;
+      updateProgressBar();
+    }
+
+    function updateProgressBar() {
+      const progress = ((currentQuestionIndex + 1) / questions.length) * 100;
+      progressBar.style.width = `${progress}%`;
+    }
+
+    nextButton.addEventListener("click", () => {
+      const inputs = questionContainer.querySelectorAll("input, textarea");
+      let isValid = true;
+
+      if (questions[currentQuestionIndex].type === "checkbox" || questions[currentQuestionIndex].type === "radio") {
+        isValid = [...inputs].some(input => input.checked);
+      } else {
+        isValid = inputs[0].value.trim() !== "";
+      }
+
+      if (!isValid) {
+        alert("Vänligen fyll i eller välj ett svar innan du går vidare.");
+        return;
+      }
+
+      currentQuestionIndex++;
+
+      if (currentQuestionIndex < questions.length) {
+        loadQuestion();
+      } else {
+        questionContainer.style.display = "none";
+        nextButton.style.display = "none";
+        submitButton.style.display = "block";
+      }
     });
+
+    loadQuestion();
   </script>
 </body>
 </html>
