@@ -4,87 +4,137 @@
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <title>Ung Karriär - Frågeformulär</title>
-  <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;600&display=swap" rel="stylesheet">
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;600&display=swap" rel="stylesheet">
   <style>
+    /* Body styling */
     body {
-      font-family: 'Poppins', sans-serif;
+      font-family: 'Inter', sans-serif;
       margin: 0;
       padding: 0;
       display: flex;
-      flex-direction: column;
       align-items: center;
       justify-content: center;
       min-height: 100vh;
-      background: linear-gradient(135deg, #001f3f, #004d9a);
+      background: linear-gradient(135deg, #0056a8, #002d5c);
       color: #fff;
     }
 
+    /* Container */
     .container {
       background: rgba(255, 255, 255, 0.1);
-      backdrop-filter: blur(10px);
-      border-radius: 20px;
-      padding: 30px;
+      backdrop-filter: blur(15px);
+      border-radius: 16px;
+      padding: 40px;
+      max-width: 450px;
       width: 100%;
-      max-width: 500px;
       text-align: center;
-      box-shadow: 0 8px 30px rgba(0, 0, 255, 0.3);
+      box-shadow: 0 4px 30px rgba(0, 0, 0, 0.5);
+      animation: fadeIn 0.6s ease-out;
     }
 
+    @keyframes fadeIn {
+      from { opacity: 0; transform: translateY(20px); }
+      to { opacity: 1; transform: translateY(0); }
+    }
+
+    /* Progress bar */
     .progress-container {
       width: 100%;
-      height: 10px;
+      height: 12px;
       background: rgba(255, 255, 255, 0.2);
-      border-radius: 50px;
+      border-radius: 6px;
       overflow: hidden;
-      margin-bottom: 15px;
+      margin-bottom: 20px;
     }
 
     .progress-bar {
       height: 100%;
       width: 0%;
       background: linear-gradient(135deg, #4A90E2, #0056A8);
-      transition: width 0.5s ease;
+      transition: width 0.4s ease;
     }
 
+    /* Progress summary */
     .progress-summary {
       font-size: 0.9rem;
       font-weight: 600;
-      margin-bottom: 10px;
-      color: rgba(255, 255, 255, 0.8);
+      color: rgba(255, 255, 255, 0.9);
+      margin-bottom: 20px;
     }
 
+    /* Question */
     .question {
-      font-size: 1.2rem;
-      font-weight: 700;
-      margin-bottom: 10px;
+      font-size: 1.3rem;
+      font-weight: 600;
+      margin-bottom: 20px;
     }
 
-    input, textarea, button {
-      width: 90%;
-      margin: 8px 0;
+    /* Inputs and labels */
+    input, textarea {
+      width: 100%;
+      padding: 14px;
+      margin: 10px 0;
+      border: 1px solid rgba(255, 255, 255, 0.2);
+      border-radius: 8px;
+      background: rgba(255, 255, 255, 0.15);
+      color: #fff;
+      font-size: 1rem;
+      outline: none;
+      transition: border-color 0.3s ease, background-color 0.3s ease;
+    }
+
+    input:focus, textarea:focus {
+      border-color: #4A90E2;
+      background: rgba(255, 255, 255, 0.2);
     }
 
     label {
       display: flex;
       align-items: center;
-      margin: 10px 0;
+      gap: 12px;
+      margin-bottom: 15px;
+      cursor: pointer;
+      font-size: 1rem;
     }
 
     input[type="checkbox"], input[type="radio"] {
-      margin-right: 10px;
+      appearance: none;
+      width: 22px;
+      height: 22px;
+      border: 2px solid #4A90E2;
+      border-radius: 4px;
+      background: none;
+      cursor: pointer;
+      transition: background 0.3s ease, box-shadow 0.3s ease;
     }
 
+    input[type="checkbox"]:checked, input[type="radio"]:checked {
+      background: #4A90E2;
+      box-shadow: 0 0 8px rgba(74, 144, 226, 0.6);
+    }
+
+    /* Buttons */
     button {
-      padding: 12px 16px;
-      font-size: 1rem;
-      border-radius: 12px;
+      width: 100%;
+      padding: 16px;
+      font-size: 1.1rem;
+      font-weight: 600;
+      border-radius: 8px;
+      border: none;
       background: linear-gradient(135deg, #4A90E2, #0056A8);
-      color: white;
+      color: #fff;
       cursor: pointer;
+      transition: transform 0.3s ease, box-shadow 0.3s ease;
     }
 
     button:hover {
-      background: #0056A8;
+      transform: translateY(-4px);
+      box-shadow: 0 8px 20px rgba(0, 0, 0, 0.3);
+    }
+
+    button:disabled {
+      background: rgba(255, 255, 255, 0.3);
+      cursor: not-allowed;
     }
   </style>
 </head>
@@ -165,12 +215,14 @@
     ];
 
     let currentQuestionIndex = 0;
+    const questionContainer = document.getElementById("question-container");
+    const progressBar = document.getElementById("progress-bar");
+    const currentQuestionNumber = document.getElementById("current-question-number");
+    const nextButton = document.getElementById("next-btn");
+    const submitButton = document.getElementById("submit-btn");
 
     function loadQuestion() {
       const currentQuestion = questions[currentQuestionIndex];
-      const questionContainer = document.getElementById("question-container");
-      const progressBar = document.getElementById("progress-bar");
-
       questionContainer.innerHTML = `
         <div class="question">${currentQuestion.question}</div>
         ${currentQuestion.type === "checkbox" || currentQuestion.type === "radio" ? `
@@ -186,13 +238,11 @@
           <input type="${currentQuestion.type}" name="${currentQuestion.name}" placeholder="Skriv ditt svar här...">
         `}
       `;
-
-      document.getElementById("current-question-number").textContent = currentQuestionIndex + 1;
+      currentQuestionNumber.textContent = currentQuestionIndex + 1;
       progressBar.style.width = `${((currentQuestionIndex + 1) / questions.length) * 100}%`;
     }
 
-    document.getElementById("next-btn").addEventListener("click", () => {
-      const questionContainer = document.getElementById("question-container");
+    nextButton.addEventListener("click", () => {
       const inputs = questionContainer.querySelectorAll("input, textarea");
       let isValid = true;
 
@@ -208,12 +258,13 @@
       }
 
       currentQuestionIndex++;
+
       if (currentQuestionIndex < questions.length) {
         loadQuestion();
       } else {
-        document.getElementById("question-container").style.display = "none";
-        document.getElementById("next-btn").style.display = "none";
-        document.getElementById("submit-btn").style.display = "block";
+        questionContainer.style.display = "none";
+        nextButton.style.display = "none";
+        submitButton.style.display = "block";
       }
     });
 
