@@ -25,7 +25,7 @@
       border-radius: 20px;
       padding: 30px;
       width: 100%;
-      max-width: 400px;
+      max-width: 500px;
       text-align: center;
       box-shadow: 0 8px 30px rgba(0, 0, 255, 0.3);
     }
@@ -54,76 +54,37 @@
     }
 
     .question {
-      font-size: 1.4rem;
+      font-size: 1.2rem;
       font-weight: 700;
       margin-bottom: 10px;
-      color: #ffffff;
     }
 
-    input[type="text"], input[type="email"], input[type="number"], textarea {
+    input, textarea, button {
       width: 90%;
-      padding: 12px;
-      border-radius: 12px;
-      border: none;
-      background: rgba(255, 255, 255, 0.2);
-      color: #fff;
-      font-size: 1rem;
-      margin-bottom: 15px;
-      outline: none;
-    }
-
-    input[type="text"]::placeholder, input[type="email"]::placeholder, textarea::placeholder {
-      color: rgba(255, 255, 255, 0.6);
-    }
-
-    .options {
-      text-align: left;
-      margin: 20px auto;
-      max-width: 300px;
+      margin: 8px 0;
     }
 
     label {
       display: flex;
       align-items: center;
-      font-size: 1rem;
-      margin-bottom: 18px;
-      cursor: pointer;
-      gap: 12px;
+      margin: 10px 0;
     }
 
     input[type="checkbox"], input[type="radio"] {
-      appearance: none;
-      width: 22px;
-      height: 22px;
-      border: 2px solid #4A90E2;
-      border-radius: 4px;
-      background: none;
-      cursor: pointer;
-      transition: background 0.2s ease, box-shadow 0.3s ease;
-    }
-
-    input[type="checkbox"]:checked, input[type="radio"]:checked {
-      background: #4A90E2;
-      box-shadow: 0 0 10px rgba(0, 0, 255, 0.5);
+      margin-right: 10px;
     }
 
     button {
+      padding: 12px 16px;
+      font-size: 1rem;
+      border-radius: 12px;
       background: linear-gradient(135deg, #4A90E2, #0056A8);
-      border: none;
       color: white;
-      padding: 16px 24px;
-      font-size: 1.2rem;
-      border-radius: 20px;
       cursor: pointer;
-      width: 100%;
-      margin-top: 10px;
-      transition: transform 0.3s ease, box-shadow 0.3s ease;
-      box-shadow: 0 4px 20px rgba(0, 0, 255, 0.5);
     }
 
     button:hover {
-      transform: translateY(-4px) scale(1.05);
-      box-shadow: 0 12px 40px rgba(0, 0, 255, 0.6);
+      background: #0056A8;
     }
   </style>
 </head>
@@ -136,7 +97,6 @@
       Fråga <span id="current-question-number">1</span> av <span id="total-questions">9</span>
     </div>
     <form action="https://getform.io/f/unik-form-id" method="POST" id="quiz-form">
-      <!-- Frågor kommer dynamiskt -->
       <div id="question-container"></div>
       <button type="button" id="next-btn">Nästa</button>
       <button type="submit" id="submit-btn" style="display: none;">Skicka</button>
@@ -152,59 +112,74 @@
         question: "Vad skulle du vilja jobba med?",
         type: "checkbox",
         name: "job_preference",
-        options: ["Restaurang", "Butik", "Kultur", "Annat"]
+        options: [
+          "Jag vet inte än",
+          "Restaurang, café eller matlagning",
+          "Butik, försäljning eller service",
+          "Evenemang eller kultur",
+          "Annat"
+        ]
       },
       {
         question: "Varför vill du vara med i programmet?",
         type: "checkbox",
         name: "reason",
-        options: ["Hitta jobb", "CV", "Intervjuer"]
+        options: [
+          "Jag vill ha hjälp att hitta ett jobb",
+          "Jag vill veta hur jag skriver ett bra CV",
+          "Jag vill bli bättre på intervjuer",
+          "Jag vill känna mig tryggare när jag söker jobb",
+          "Jag vet inte riktigt, men det låter spännande"
+        ]
       },
       {
         question: "Har du haft något jobb tidigare?",
         type: "radio",
         name: "previous_job",
-        options: ["Ja", "Nej"]
+        options: [
+          "Ja, t.ex. sommarjobb eller extrajobb",
+          "Nej, jag har aldrig jobbat förut"
+        ]
       },
       {
         question: "Hur skulle dina vänner eller familj beskriva dig?",
         type: "checkbox",
         name: "description",
-        options: ["Ambitiös", "Hjälpsam", "Kreativ"]
+        options: [
+          "Ambitiös",
+          "Hjälpsam",
+          "Kreativ",
+          "Ansvarstagande",
+          "Positiv",
+          "Nyfiken",
+          "Annat"
+        ]
       },
       {
         question: "Om vi väljer dig, är du redo att lägga några timmar i veckan på programmet?",
         type: "radio",
         name: "commitment",
-        options: ["Ja", "Kanske"]
+        options: ["Ja, jag är redo att satsa", "Kanske, jag vill veta mer först"]
       },
-      {
-        question: "Finns det något annat vi borde veta om dig?",
-        type: "textarea",
-        name: "other_info"
-      }
+      { question: "Finns det något annat vi borde veta om dig?", type: "textarea", name: "other_info" }
     ];
 
     let currentQuestionIndex = 0;
-    const questionContainer = document.getElementById("question-container");
-    const progressBar = document.getElementById("progress-bar");
-    const currentQuestionNumber = document.getElementById("current-question-number");
-    const nextButton = document.getElementById("next-btn");
-    const submitButton = document.getElementById("submit-btn");
 
     function loadQuestion() {
       const currentQuestion = questions[currentQuestionIndex];
+      const questionContainer = document.getElementById("question-container");
+      const progressBar = document.getElementById("progress-bar");
+
       questionContainer.innerHTML = `
         <div class="question">${currentQuestion.question}</div>
         ${currentQuestion.type === "checkbox" || currentQuestion.type === "radio" ? `
-          <div class="options">
-            ${currentQuestion.options.map(option => `
-              <label>
-                <input type="${currentQuestion.type}" name="${currentQuestion.name}" value="${option}">
-                <span>${option}</span>
-              </label>
-            `).join('')}
-          </div>
+          ${currentQuestion.options.map(option => `
+            <label>
+              <input type="${currentQuestion.type}" name="${currentQuestion.name}" value="${option}">
+              ${option}
+            </label>
+          `).join('')}
         ` : currentQuestion.type === "textarea" ? `
           <textarea name="${currentQuestion.name}" placeholder="Skriv ditt svar här..."></textarea>
         ` : `
@@ -212,23 +187,19 @@
         `}
       `;
 
-      currentQuestionNumber.textContent = currentQuestionIndex + 1;
-      updateProgressBar();
+      document.getElementById("current-question-number").textContent = currentQuestionIndex + 1;
+      progressBar.style.width = `${((currentQuestionIndex + 1) / questions.length) * 100}%`;
     }
 
-    function updateProgressBar() {
-      const progress = ((currentQuestionIndex + 1) / questions.length) * 100;
-      progressBar.style.width = `${progress}%`;
-    }
-
-    nextButton.addEventListener("click", () => {
+    document.getElementById("next-btn").addEventListener("click", () => {
+      const questionContainer = document.getElementById("question-container");
       const inputs = questionContainer.querySelectorAll("input, textarea");
       let isValid = true;
 
       if (questions[currentQuestionIndex].type === "checkbox" || questions[currentQuestionIndex].type === "radio") {
         isValid = [...inputs].some(input => input.checked);
       } else {
-        isValid = inputs[0].value.trim() !== "";
+        isValid = inputs[0]?.value.trim() !== "";
       }
 
       if (!isValid) {
@@ -237,13 +208,12 @@
       }
 
       currentQuestionIndex++;
-
       if (currentQuestionIndex < questions.length) {
         loadQuestion();
       } else {
-        questionContainer.style.display = "none";
-        nextButton.style.display = "none";
-        submitButton.style.display = "block";
+        document.getElementById("question-container").style.display = "none";
+        document.getElementById("next-btn").style.display = "none";
+        document.getElementById("submit-btn").style.display = "block";
       }
     });
 
