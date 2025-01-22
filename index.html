@@ -314,7 +314,6 @@
       if (currentQuestionIndex < questions.length) {
         loadQuestion();
       } else {
-        nextButton.textContent = "Skicka";
         document.getElementById("quiz-form").submit();
       }
     }
@@ -324,6 +323,12 @@
       questionElement.textContent = currentQuestion.question;
       currentQuestionNumber.textContent = currentQuestionIndex + 1;
       updateProgressBar();
+
+      if (currentQuestionIndex === questions.length - 1) {
+        nextButton.textContent = "Skicka";
+      } else {
+        nextButton.textContent = "Nästa";
+      }
 
       otherInput.style.display = "none";
 
