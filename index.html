@@ -47,12 +47,11 @@
       border-radius: 50px;
       overflow: hidden;
       margin-bottom: 15px;
-      position: relative;
     }
 
     .progress-bar {
       height: 100%;
-      width: 0%;
+      width: 0;
       background: linear-gradient(135deg, #4A90E2, #0056A8);
       transition: width 0.5s ease;
     }
@@ -68,10 +67,9 @@
       font-size: 1.4rem;
       font-weight: 700;
       margin-bottom: 10px;
-      color: #ffffff;
     }
 
-    input[type="text"], input[type="email"] {
+    input[type="text"], input[type="email"], .options input {
       width: 90%;
       padding: 12px;
       border-radius: 12px;
@@ -80,47 +78,11 @@
       color: #fff;
       font-size: 1rem;
       margin-bottom: 15px;
-      text-align: left;
       outline: none;
     }
 
     input[type="text"]::placeholder, input[type="email"]::placeholder {
       color: rgba(255, 255, 255, 0.6);
-    }
-
-    .options {
-      text-align: left;
-      margin: 20px auto;
-      max-width: 300px;
-    }
-
-    label {
-      display: flex;
-      align-items: center;
-      font-size: 1rem;
-      margin-bottom: 18px;
-      cursor: pointer;
-      gap: 12px;
-    }
-
-    input[type="checkbox"], input[type="radio"] {
-      appearance: none;
-      width: 22px;
-      height: 22px;
-      border: 2px solid #4A90E2;
-      border-radius: 4px;
-      background: none;
-      cursor: pointer;
-      transition: background 0.2s ease, box-shadow 0.3s ease;
-    }
-
-    input[type="checkbox"]:checked, input[type="radio"]:checked {
-      background: #4A90E2;
-      box-shadow: 0 0 10px rgba(0, 0, 255, 0.5);
-    }
-
-    label span {
-      line-height: 1.5;
     }
 
     button {
@@ -134,7 +96,6 @@
       width: 100%;
       margin-top: 10px;
       transition: transform 0.3s ease, box-shadow 0.3s ease;
-      box-shadow: 0 4px 20px rgba(0, 0, 255, 0.5);
     }
 
     button:hover {
@@ -149,7 +110,6 @@
       color: rgba(255, 255, 255, 0.7);
     }
 
-    /* Tack-sida stil */
     .thank-you {
       text-align: center;
       padding: 50px;
@@ -183,10 +143,7 @@
         <div class="question" id="question">Vad heter du?</div>
         <input type="text" id="answer" placeholder="Skriv ditt namn här..." />
       </div>
-
-      <div class="options" id="options-container" style="display: none;"></div>
-      <input type="text" id="other-input" class="other-input" placeholder="Skriv ditt svar här..." style="display:none;" />
-
+      <div class="options" id="options-container"></div>
       <button type="button" id="next-btn">Nästa</button>
     </form>
   </div>
@@ -203,89 +160,31 @@
       {
         question: "Vad skulle du vilja jobba med?",
         type: "checkbox",
-        options: [
-          "Jag vet inte än.",
-          "Restaurang, café eller matlagning.",
-          "Butik, försäljning eller service.",
-          "Evenemang eller kultur.",
-          "Annat"
-        ]
+        options: ["Jag vet inte än.", "Restaurang", "Annat"]
       },
-      {
-        question: "Varför vill du vara med i programmet?",
-        type: "checkbox",
-        options: [
-          "Jag vill ha hjälp att hitta ett jobb.",
-          "Jag vill veta hur jag skriver ett bra CV.",
-          "Jag vill bli bättre på intervjuer.",
-          "Jag vill känna mig tryggare när jag söker jobb.",
-          "Jag vet inte riktigt, men det låter spännande."
-        ]
-      },
-      {
-        question: "Har du haft något jobb tidigare?",
-        type: "radio",
-        options: [
-          "Ja, t.ex. sommarjobb eller extrajobb.",
-          "Nej, jag har aldrig jobbat förut."
-        ]
-      },
-      {
-        question: "Hur skulle dina vänner eller familj beskriva dig? (Välj upp till tre ord)",
-        type: "checkbox",
-        options: [
-          "Ambitiös",
-          "Hjälpsam",
-          "Kreativ",
-          "Ansvarstagande",
-          "Positiv",
-          "Nyfiken",
-          "Annat"
-        ]
-      },
-      {
-        question: "Om vi väljer dig, är du redo att lägga några timmar i veckan på programmet?",
-        type: "radio",
-        options: [
-          "Ja, jag är redo att satsa.",
-          "Kanske, jag vill veta mer först."
-        ]
-      },
-      {
-        question: "Finns det något annat vi borde veta om dig? (Frivillig fråga, kort svar)",
-        type: "text",
-        optional: true
-      }
     ];
 
     let currentQuestionIndex = 0;
+    const progressBar = document.getElementById("progress-bar");
     const questionElement = document.getElementById("question");
     const answerElement = document.getElementById("answer");
     const optionsContainer = document.getElementById("options-container");
-    const progressBar = document.getElementById("progress-bar");
     const nextButton = document.getElementById("next-btn");
     const currentQuestionNumber = document.getElementById("current-question-number");
 
     nextButton.addEventListener("click", goToNextQuestion);
 
-    document.addEventListener("keydown", (e) => {
-      if (e.key === "Enter") {
-        e.preventDefault();
-        goToNextQuestion();
-      }
-    });
-
     function goToNextQuestion() {
       const currentQuestion = questions[currentQuestionIndex];
 
       if (currentQuestion.type === "text" || currentQuestion.type === "email") {
-        if (answerElement.value.trim() === "" && !currentQuestion.optional) {
+        if (!answerElement.value.trim()) {
           alert("Vänligen fyll i ett svar innan du går vidare.");
           return;
         }
       } else if (currentQuestion.type === "checkbox" || currentQuestion.type === "radio") {
-        const selectedOptions = getCheckedOptions();
-        if (selectedOptions.length === 0 && !currentQuestion.optional) {
+        const selectedOptions = Array.from(document.querySelectorAll('input[name="option"]:checked'));
+        if (!selectedOptions.length) {
           alert("Vänligen välj minst ett alternativ.");
           return;
         }
@@ -303,39 +202,24 @@
       const currentQuestion = questions[currentQuestionIndex];
       questionElement.textContent = currentQuestion.question;
       currentQuestionNumber.textContent = currentQuestionIndex + 1;
-      updateProgressBar();
+
+      progressBar.style.width = `${((currentQuestionIndex + 1) / questions.length) * 100}%`;
 
       if (currentQuestion.type === "text" || currentQuestion.type === "email") {
         answerElement.style.display = "block";
         optionsContainer.style.display = "none";
         answerElement.value = "";
-        answerElement.placeholder =
-          currentQuestion.type === "text"
-            ? "Skriv ditt svar här..."
-            : "Skriv din e-postadress här...";
+        answerElement.placeholder = currentQuestion.type === "text" ? "Skriv ditt svar här..." : "Skriv din e-postadress här...";
       } else {
         answerElement.style.display = "none";
         optionsContainer.style.display = "block";
-        optionsContainer.innerHTML = currentQuestion.options
-          .map(
-            (option, index) => `
-            <label>
-              <input type="${currentQuestion.type}" name="option" value="${option}" />
-              <span>${option}</span>
-            </label>`
-          )
-          .join("");
+        optionsContainer.innerHTML = currentQuestion.options.map(option => `
+          <label>
+            <input type="${currentQuestion.type}" name="option" value="${option}" />
+            <span>${option}</span>
+          </label>
+        `).join("");
       }
-    }
-
-    function getCheckedOptions() {
-      const checkedInputs = document.querySelectorAll('input[name="option"]:checked');
-      return Array.from(checkedInputs).map((input) => input.value);
-    }
-
-    function updateProgressBar() {
-      const progress = ((currentQuestionIndex + 1) / questions.length) * 100;
-      progressBar.style.width = `${progress}%`;
     }
 
     function showCompletionMessage() {
@@ -343,7 +227,8 @@
         <div class="thank-you">
           <h1>Tack för att du fyllde i formuläret!</h1>
           <p>Vi har tagit emot din information och kommer att kontakta dig inom kort.</p>
-        </div>`;
+        </div>
+      `;
     }
 
     loadQuestion();
