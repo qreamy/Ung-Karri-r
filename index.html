@@ -162,6 +162,11 @@
     .thank-you p {
       font-size: 1.2rem;
     }
+
+    .other-input {
+      display: none;
+      margin-top: 10px;
+    }
   </style>
 </head>
 <body>
@@ -183,7 +188,7 @@
       </div>
 
       <div class="options" id="options-container" style="display: none;"></div>
-      <input type="text" id="other-input" name="other" class="other-input" placeholder="Skriv ditt svar här..." style="display:none;" />
+      <input type="text" id="other-input" name="other" class="other-input" placeholder="Ange ditt svar här..." />
 
       <button type="button" id="next-btn">Nästa</button>
     </form>
@@ -266,6 +271,7 @@
     const questionElement = document.getElementById("question");
     const answerElement = document.getElementById("answer");
     const optionsContainer = document.getElementById("options-container");
+    const otherInput = document.getElementById("other-input");
     const progressBar = document.getElementById("progress-bar");
     const nextButton = document.getElementById("next-btn");
     const currentQuestionNumber = document.getElementById("current-question-number");
@@ -293,13 +299,22 @@
           alert("Vänligen välj minst ett alternativ.");
           return;
         }
-        addHiddenInputs(currentQuestion.name, selectedOptions);
+        if (selectedOptions.includes("Annat")) {
+          if (!otherInput.value.trim()) {
+            alert("Vänligen fyll i rutan för 'Annat'.");
+            return;
+          }
+          addHiddenInput(currentQuestion.name, otherInput.value);
+        } else {
+          addHiddenInputs(currentQuestion.name, selectedOptions);
+        }
       }
 
       currentQuestionIndex++;
       if (currentQuestionIndex < questions.length) {
         loadQuestion();
       } else {
+        nextButton.textContent = "Skicka";
         document.getElementById("quiz-form").submit();
       }
     }
@@ -309,6 +324,8 @@
       questionElement.textContent = currentQuestion.question;
       currentQuestionNumber.textContent = currentQuestionIndex + 1;
       updateProgressBar();
+
+      otherInput.style.display = "none";
 
       if (currentQuestion.type === "text" || currentQuestion.type === "email") {
         answerElement.style.display = "block";
@@ -321,7 +338,7 @@
         optionsContainer.style.display = "block";
         optionsContainer.innerHTML = currentQuestion.options.map(option => `
           <label>
-            <input type="${currentQuestion.type}" name="${currentQuestion.name}" value="${option}" />
+            <input type="${currentQuestion.type}" name="${currentQuestion.name}" value="${option}" ${option === "Annat" ? "onchange=showOtherInput(this)" : ""}/>
             <span>${option}</span>
           </label>
         `).join('');
@@ -329,7 +346,8 @@
     }
 
     function getCheckedOptions() {
-      const checkedInputs = document.querySelectorAll('input[name="option"]:checked');
+      const name = questions[currentQuestionIndex].name;
+      const checkedInputs = document.querySelectorAll(`input[name="${name}"]:checked`);
       return Array.from(checkedInputs).map(input => input.value);
     }
 
@@ -342,6 +360,24 @@
         hiddenInput.value = value;
         form.appendChild(hiddenInput);
       });
+    }
+
+    function addHiddenInput(name, value) {
+      const form = document.getElementById("quiz-form");
+      const hiddenInput = document.createElement("input");
+      hiddenInput.type = "hidden";
+      hiddenInput.name = name;
+      hiddenInput.value = value;
+      form.appendChild(hiddenInput);
+    }
+
+    function showOtherInput(checkbox) {
+      if (checkbox.checked && checkbox.value === "Annat") {
+        otherInput.style.display = "block";
+        otherInput.value = "";
+      } else {
+        otherInput.style.display = "none";
+      }
     }
 
     function updateProgressBar() {
