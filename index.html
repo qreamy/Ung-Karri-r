@@ -181,7 +181,7 @@
     <div class="progress-summary">
       Fråga <span id="current-question-number">1</span> av <span id="total-questions">9</span>
     </div>
-    <form id="quiz-form" method="POST" action="https://getform.io/f/bjjjpkxb">
+    <form id="quiz-form" method="POST" action="https://getform.io/f/bjjjpkxb" onsubmit="redirectToThankYou(event)">
       <div id="question-container">
         <div class="question" id="question">Vad heter du?</div>
         <input type="text" id="answer" name="question1" placeholder="Skriv ditt namn här..." />
@@ -388,6 +388,11 @@
     function updateProgressBar() {
       const progress = ((currentQuestionIndex + 1) / questions.length) * 100;
       progressBar.style.width = `${progress}%`;
+    }
+
+    function redirectToThankYou(event) {
+      event.preventDefault();
+      window.location.href = "tack.html";
     }
 
     loadQuestion();
