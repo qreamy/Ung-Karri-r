@@ -338,7 +338,7 @@
         optionsContainer.style.display = "block";
         optionsContainer.innerHTML = currentQuestion.options.map(option => `
           <label>
-            <input type="${currentQuestion.type}" name="${currentQuestion.name}" value="${option}" ${option === "Annat" ? "onchange=showOtherInput(this)" : ""}/>
+            <input type="${currentQuestion.type}" name="${currentQuestion.name}" value="${option}" onchange="showOtherInput(this)" />
             <span>${option}</span>
           </label>
         `).join('');
